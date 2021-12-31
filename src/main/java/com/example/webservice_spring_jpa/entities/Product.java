@@ -1,12 +1,16 @@
 package com.example.webservice_spring_jpa.entities;
 
 import java.io.Serializable;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -21,6 +25,12 @@ public class Product implements Serializable {
 	private String description;
 	private Double price;
 	private String imgUrl;
+	
+	@ManyToMany
+	@JoinTable(name = "tb_product_category", 
+	joinColumns = @JoinColumn(name = "product_id"),
+	inverseJoinColumns = @JoinColumn(name = "category_id"))
+	private Set<Category> categories = new HashSet<>();
 	
 	public Product () {
 	}
@@ -74,22 +84,12 @@ public class Product implements Serializable {
 		this.imgUrl = imgUrl;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(description, id, imgUrl, name, price);
+	public Set<Category> getCategories() {
+		return categories;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Product other = (Product) obj;
-		return Objects.equals(description, other.description) && Objects.equals(id, other.id)
-				&& Objects.equals(imgUrl, other.imgUrl) && Objects.equals(name, other.name)
-				&& Objects.equals(price, other.price);
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
+
 }
